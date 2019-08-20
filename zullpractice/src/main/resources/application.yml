@@ -3,3 +3,6 @@ zuul:
     foos:
       path: /foos/**
       url: http://localhost:8081/foos
+    bars:
+      path: /bars/**
+      url: http://localhost:8082/bars
