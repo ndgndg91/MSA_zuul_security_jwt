@@ -1,0 +1,14 @@
+${AnsiColor.BLUE}
+                /$$
+               | $$
+ /$$$$$$       | $$  /$$$$$$
+| $$_  $$  /$$$$$$$ /$$__  $$
+| $$ \ $$ /$$__  $$| $$  \ $$
+| $$ | $$| $$  \ $$| $$  \ $$
+| $$ | $$|  $$$$$$$|  $$$$$$$
+|__/ |__/ \______/  \____  $$
+                    /$$  \ $$
+                   |  $$$$$$/
+                    \______/
+${AnsiColor.BRIGHT_GREEN}Spring Boot ${AnsiColor.RED}${spring-boot.formatted-version}
+${AnsiColor.BRIGHT_GREEN}Author 동길 (ndgndg91@gmail.com)

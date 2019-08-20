@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: foo
+  datasource:
+    url: "jdbc:mysql://ndgndg91.synology.me:3307/test?useSSL=false&serverTimezone=KST"
+    username: test
+    password: test
+    hikari:
+      pool-name: hikari-cp
+      maximum-pool-size: 30
+      minimum-idle: 2
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+  jpa:
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    open-in-view: false
+
+
+server:
+  port: 8081
