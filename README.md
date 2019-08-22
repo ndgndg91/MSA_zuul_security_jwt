@@ -5,6 +5,13 @@ MicroServiceArchitecture Study
     - port : 8080
     - pre-zuul-filter
     - post-zuul-filter
+    
+- authserver
+    - port : 9090
+    - JWT
+    - Security
+    - MariaDB10
+    - JPA
   
 - foos
     - port : 8081
