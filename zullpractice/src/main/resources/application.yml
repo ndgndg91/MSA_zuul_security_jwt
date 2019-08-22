@@ -1,5 +1,8 @@
 zuul:
   routes:
+    auth:
+      path: /api/**
+      url: http://localhost:9090/api
     foos:
       path: /foos/**
       url: http://localhost:8081/foos
