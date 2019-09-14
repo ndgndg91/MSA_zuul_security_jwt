@@ -3,6 +3,7 @@ package com.ndgndg91.security.authserver.service.user;
 import com.ndgndg91.security.authserver.error.NotFoundException;
 import com.ndgndg91.security.authserver.model.user.User;
 import com.ndgndg91.security.authserver.repository.user.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
+@Slf4j
 @Service
 public class UserService {
     private final PasswordEncoder passwordEncoder;
@@ -31,6 +33,7 @@ public class UserService {
                 password.length() >= 4 && password.length() <= 15,
                 "password length must be between 4 and 15 characters."
         );
+        checkArgument(!findByEmail(email).isPresent(), "Already Exists Email : ", email);
 
         User user = new User(name, email, passwordEncoder.encode(password));
         return save(user);
