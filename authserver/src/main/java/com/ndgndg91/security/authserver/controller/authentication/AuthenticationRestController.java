@@ -5,6 +5,7 @@ import com.ndgndg91.security.authserver.model.api.response.ApiResult;
 import com.ndgndg91.security.authserver.security.AuthenticationRequest;
 import com.ndgndg91.security.authserver.security.AuthenticationResult;
 import com.ndgndg91.security.authserver.security.JwtAuthenticationToken;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -16,8 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static com.ndgndg91.security.authserver.model.api.response.ApiResult.OK;
 
+@Slf4j
 @RestController
-@RequestMapping("api/auth")
+@RequestMapping("api/user/auth")
 public class AuthenticationRestController {
 
     private final AuthenticationManager authenticationManager;

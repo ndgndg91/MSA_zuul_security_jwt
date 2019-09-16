@@ -1,7 +1,6 @@
 package com.ndgndg91.security.authserver.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -28,11 +27,10 @@ import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
+@Slf4j
 public class JwtAuthenticationTokenFilter extends GenericFilterBean {
 
     private static final Pattern BEARER = Pattern.compile("^Bearer$", Pattern.CASE_INSENSITIVE);
-
-    Logger log = LoggerFactory.getLogger(getClass());
 
     @Value("${jwt.token.header}") private String tokenHeader;
 
@@ -63,7 +61,7 @@ public class JwtAuthenticationTokenFilter extends GenericFilterBean {
                     String email = claims.email;
                     List<GrantedAuthority> authorities = obtainAuthorities(claims);
 
-                    if (nonNull(userKey) && isNotEmpty(name) && nonNull(email) && authorities.size() > 0) {
+                    if (nonNull(userKey) && isNotEmpty(name) && nonNull(email) && !authorities.isEmpty()) {
                         JwtAuthenticationToken authentication =
                                 new JwtAuthenticationToken(new JwtAuthentication(userKey, name, email), null, authorities);
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

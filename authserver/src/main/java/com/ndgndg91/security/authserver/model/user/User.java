@@ -1,7 +1,7 @@
 package com.ndgndg91.security.authserver.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ndgndg91.security.authserver.security.JWT;
+import com.ndgndg91.security.authserver.model.api.request.user.ChangePasswordRequest;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +22,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 @Table(name = "user")
 @Entity
 public class User {
+    private static final String PROTECTED = "[PROTECTED]";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -85,14 +86,13 @@ public class User {
             throw new IllegalArgumentException("Bad credential");
     }
 
+    public void updatePassword(ChangePasswordRequest request) {
+        this.password = request.getNewPassword();
+    }
+
     public void afterLoginSuccess() {
         loginCount++;
         lastLoginAt = now();
-    }
-
-    public String newApiToken(JWT jwt, String[] roles) {
-        JWT.Claims claims = JWT.Claims.of(seq, name, email, roles);
-        return jwt.newToken(claims);
     }
 
     public Long getSeq() {
@@ -142,7 +142,7 @@ public class User {
                 .append("seq", seq)
                 .append("name", name)
                 .append("email", email)
-                .append("password", "[PROTECTED]")
+                .append("password", PROTECTED)
                 .append("loginCount", loginCount)
                 .append("lastLoginAt", lastLoginAt)
                 .append("createAt", createAt)

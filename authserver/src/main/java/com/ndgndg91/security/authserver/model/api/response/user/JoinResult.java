@@ -1,6 +1,6 @@
 package com.ndgndg91.security.authserver.model.api.response.user;
 
-import com.ndgndg91.security.authserver.model.user.User;
+import com.ndgndg91.security.authserver.model.dto.UserDTO;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -9,9 +9,9 @@ public class JoinResult {
 
     private final String apiToken;
 
-    private final User user;
+    private final UserDTO user;
 
-    public JoinResult(String apiToken, User user) {
+    public JoinResult(String apiToken, UserDTO user) {
         checkNotNull(apiToken, "apiToken must be provided.");
         checkNotNull(user, "user must be provided.");
 
@@ -23,7 +23,7 @@ public class JoinResult {
         return apiToken;
     }
 
-    public User getUser() {
+    public UserDTO getUser() {
         return user;
     }
 

@@ -1,8 +1,12 @@
 package com.ndgndg91.security.authserver.service.user;
 
 import com.ndgndg91.security.authserver.error.NotFoundException;
+import com.ndgndg91.security.authserver.error.UnauthorizedException;
+import com.ndgndg91.security.authserver.model.api.request.user.ChangePasswordRequest;
+import com.ndgndg91.security.authserver.model.dto.UserDTO;
 import com.ndgndg91.security.authserver.model.user.User;
 import com.ndgndg91.security.authserver.repository.user.UserRepository;
+import com.ndgndg91.security.authserver.security.JwtAuthentication;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,7 +31,7 @@ public class UserService {
     }
 
     @Transactional
-    public User join(String name, String email, String password) {
+    public UserDTO join(String name, String email, String password) {
         checkArgument(isNotEmpty(password), "password must be provided.");
         checkArgument(
                 password.length() >= 4 && password.length() <= 15,
@@ -36,11 +40,11 @@ public class UserService {
         checkArgument(!findByEmail(email).isPresent(), "Already Exists Email : ", email);
 
         User user = new User(name, email, passwordEncoder.encode(password));
-        return save(user);
+        return UserDTO.create(save(user));
     }
 
     @Transactional
-    public User login(String email, String password) {
+    public UserDTO login(String email, String password) {
         checkNotNull(password, "password must be provided.");
 
         User user = findByEmail(email)
@@ -48,14 +52,35 @@ public class UserService {
         user.login(passwordEncoder, password);
         user.afterLoginSuccess();
         save(user);
-        return user;
+        return UserDTO.create(user);
     }
 
     @Transactional(readOnly = true)
-    public Optional<User> findById(Long userId) {
+    public Optional<UserDTO> findById(Long userId) {
         checkNotNull(userId, "userId must be provided.");
 
-        return userRepository.findBySeq(userId);
+        return userRepository.findBySeq(userId).map(UserDTO::create);
+    }
+
+    @Transactional
+    public UserDTO updateAll(JwtAuthentication authentication, ChangePasswordRequest request) {
+        if (request.isNotRightNewPw()) {
+            throw  new UnauthorizedException(request.getNewPassword()+ ", "+ request.getNewPasswordCheck() +" is Not Same.");
+        }
+
+        User user = findByEmail(authentication.email)
+                .orElseThrow(() -> new NotFoundException(User.class, authentication.email));
+
+        log.info(user.getPassword());
+        log.info(request.getOriginPassword());
+        log.info(passwordEncoder.encode(request.getOriginPassword()));
+        if (!passwordEncoder.matches(user.getPassword(), passwordEncoder.encode(request.getOriginPassword()))) {
+            throw new UnauthorizedException("origin password is not " + request.getOriginPassword());
+        }
+
+        request.setNewPassword(passwordEncoder.encode(request.getNewPassword()));
+        user.updatePassword(request);
+        return UserDTO.create(save(user));
     }
 
     @Transactional(readOnly = true)

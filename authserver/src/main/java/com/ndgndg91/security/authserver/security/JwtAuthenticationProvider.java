@@ -1,8 +1,8 @@
 package com.ndgndg91.security.authserver.security;
 
 import com.ndgndg91.security.authserver.error.NotFoundException;
+import com.ndgndg91.security.authserver.model.dto.UserDTO;
 import com.ndgndg91.security.authserver.model.user.Role;
-import com.ndgndg91.security.authserver.model.user.User;
 import com.ndgndg91.security.authserver.service.user.UserService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -34,7 +34,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     private Authentication processUserAuthentication(AuthenticationRequest request) {
         try {
-            User user = userService.login(request.getPrincipal(), request.getCredentials());
+            UserDTO user = userService.login(request.getPrincipal(), request.getCredentials());
             JwtAuthenticationToken authenticated =
                     new JwtAuthenticationToken(user.getSeq(), null, createAuthorityList(Role.USER.value()));
             String apiToken = user.newApiToken(jwt, new String[]{Role.USER.value()});
