@@ -38,10 +38,6 @@ public class ChangePasswordRequest {
         return newPassword;
     }
 
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-    }
-
     public String getNewPasswordCheck() {
         return newPasswordCheck;
     }

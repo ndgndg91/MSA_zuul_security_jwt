@@ -86,8 +86,8 @@ public class User {
             throw new IllegalArgumentException("Bad credential");
     }
 
-    public void updatePassword(ChangePasswordRequest request) {
-        this.password = request.getNewPassword();
+    public void updatePassword(PasswordEncoder passwordEncoder, ChangePasswordRequest request) {
+        this.password = passwordEncoder.encode(request.getNewPassword());
     }
 
     public void afterLoginSuccess() {

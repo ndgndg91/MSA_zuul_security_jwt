@@ -71,15 +71,15 @@ public class UserService {
         User user = findByEmail(authentication.email)
                 .orElseThrow(() -> new NotFoundException(User.class, authentication.email));
 
+        log.info("encoded");
         log.info(user.getPassword());
+        log.info("credentials");
         log.info(request.getOriginPassword());
-        log.info(passwordEncoder.encode(request.getOriginPassword()));
-        if (!passwordEncoder.matches(user.getPassword(), passwordEncoder.encode(request.getOriginPassword()))) {
+        if (!passwordEncoder.matches(request.getOriginPassword(), user.getPassword())) {
             throw new UnauthorizedException("origin password is not " + request.getOriginPassword());
         }
 
-        request.setNewPassword(passwordEncoder.encode(request.getNewPassword()));
-        user.updatePassword(request);
+        user.updatePassword(passwordEncoder, request);
         return UserDTO.create(save(user));
     }
 
